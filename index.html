@@ -1833,6 +1833,7 @@ document.addEventListener('click', function(e) {
   if (t.classList && t.classList.contains('earn-mark')) { earnMarkDone(parseInt(t.dataset.id)); return; }
   if (t.classList && t.classList.contains('earn-del')) { earnDelete(parseInt(t.dataset.id)); return; }
   if (t.classList && t.classList.contains('ins-del')) { insights.splice(parseInt(t.dataset.i), 1); insRender(); return; }
+});
   
 $('backVis').addEventListener('click', function() { show(6); });
 $('backEarn').addEventListener('click', function() { show(6); });
