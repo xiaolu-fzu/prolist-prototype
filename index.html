@@ -1884,22 +1884,22 @@ function fitPhone() {
   // 实际尺寸 = 390x780 + 黑框 8px*2 = 406x796
   var pw = 406, ph = 796;
   var topPad = 20, bottomPad = 12;
-  // 等比缩小：整个手机框完整放进屏幕（含上下留白），上限 1
+  // 等比缩小：整个手机框完整放进屏幕（含上下留白），上限 1；再略微缩小 2%
   var scale = Math.min(vw / pw, (vh - topPad - bottomPad) / ph, 1);
-  scale = Math.min(scale, 1) * 0.97;
-  // 缩放原点在顶部中心：手机框顶部贴 2px 处，向下铺
+  scale = Math.min(scale, 1) * 0.98;
+  // 缩放原点在顶部中心
   phone.style.transformOrigin = 'top center';
   phone.style.transform = 'scale(' + scale + ')';
-  // 普通流：margin 顶部 2px + 左右 auto 水平居中
-  // 水平位置：居中后再左移 10px
-  var leftGap = (vw - pw * scale) * 0.50 - 10;
+  // 水平位置：居中基准，再右移 3px（一点点）
+  var leftGap = (vw - pw * scale) * 0.50 + 3;
   phone.style.margin = topPad + 'px 0 0 ' + Math.round(leftGap) + 'px';
-  // body 高度 = 缩放后框 + 上下留白（不再受 100vh 干扰）
+  // body 高度 = 缩放后框 + 上下留白
   document.body.style.height = Math.round(ph * scale + topPad + bottomPad) + 'px';
 }
 window.addEventListener('resize', fitPhone);
 window.addEventListener('orientationchange', function(){ setTimeout(fitPhone, 150); });
 fitPhone();
+
 
 
 
