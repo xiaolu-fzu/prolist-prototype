@@ -332,9 +332,9 @@
   .qr-close { color:#fff; font-size:13px; margin-top:14px; cursor:pointer; padding:8px 20px; }
 
   @media (max-width: 480px) {
-    /* 手机端：完整手机框靠上（顶部留白少），底部留白稍多 */
-    body { padding:2px 0 16px; margin:0; min-height:auto; align-items:flex-start; overflow:hidden; }
-    .phone { /* 保持原样：黑框+圆角+阴影 */ }
+    /* 手机端：普通文档流，位置完全由 fitPhone 用 margin 控制 */
+    body { display:block; padding:0; margin:0; min-height:0; overflow:hidden; }
+    .phone { margin:0 auto; }  /* 水平居中，垂直位置由 JS 控制 */
   }
 </style>
 </head>
@@ -1869,7 +1869,7 @@ chartRender('month');
 insRender();
 earnRender();
 // ===== 移动端自适应：仅手机端生效（PC 原样不动） =====
-// 手机端：完整"原型手机"（含黑框）等比缩小，靠上显示（顶少底多）
+// 手机端：完整"原型手机"（含黑框）等比缩小，整体下移（顶部 20px / 底部 12px）
 function fitPhone() {
   var phone = document.querySelector('.phone');
   if (!phone) return;
@@ -1877,22 +1877,28 @@ function fitPhone() {
   var vh = window.innerHeight || document.documentElement.clientHeight;
   if (vw > 480) {           // PC / 平板：不缩放，恢复原样
     phone.style.transform = '';
+    phone.style.margin = '';
     document.body.style.height = '';
     return;
   }
   // 实际尺寸 = 390x780 + 黑框 8px*2 = 406x796
   var pw = 406, ph = 796;
-  var topPad = 2, bottomPad = 16;
-  // 等比缩小：整个手机框完整显示，顶部少留白、底部稍多
+  var topPad = 20, bottomPad = 12;
+  // 等比缩小：整个手机框完整放进屏幕（含上下留白），上限 1
   var scale = Math.min(vw / pw, (vh - topPad - bottomPad) / ph, 1);
+  scale = Math.min(scale, 1);
+  // 缩放原点在顶部中心：手机框顶部贴 2px 处，向下铺
   phone.style.transformOrigin = 'top center';
   phone.style.transform = 'scale(' + scale + ')';
-  // body 高度 = 缩放后手机框 + 上下留白，避免滚动条
+  // 普通流：margin 顶部 2px + 左右 auto 水平居中
+  phone.style.margin = topPad + 'px auto 0';
+  // body 高度 = 缩放后框 + 上下留白（不再受 100vh 干扰）
   document.body.style.height = Math.round(ph * scale + topPad + bottomPad) + 'px';
 }
 window.addEventListener('resize', fitPhone);
 window.addEventListener('orientationchange', function(){ setTimeout(fitPhone, 150); });
 fitPhone();
+
 
 
 
