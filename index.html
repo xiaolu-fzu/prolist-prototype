@@ -6,8 +6,8 @@
 <title>ProListing · 记一笔流程原型 V4（逾期标红+延期+历史永久✗）</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; background:#ececef; display:flex; justify-content:center; padding:20px 0; }
-  .phone { width:390px; height:780px; background:#fff; border-radius:36px; box-shadow:0 12px 40px rgba(0,0,0,.18); overflow:hidden; border:8px solid #1c1c1e; position:relative; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; background:#ececef; display:flex; justify-content:center; align-items:center; padding:20px 0; min-height:100vh; }
+  .phone { width:390px; height:780px; background:#fff; border-radius:36px; box-shadow:0 12px 40px rgba(0,0,0,.18); overflow:hidden; border:8px solid #1c1c1e; position:relative; transform-origin:center center; flex-shrink:0; }
   .phone::before { content:""; position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:22px; background:#1c1c1e; border-radius:0 0 14px 14px; z-index:10; }
   .screen { display:none; height:764px; flex-direction:column; }
   .screen.active { display:flex; }
@@ -330,6 +330,11 @@
   .qr-big { background:#fff; padding:20px; border-radius:16px; }
   .qr-big img { width:220px; height:auto; display:block; border-radius:8px; margin:0 auto; }   // 保持原始宽高比，不强制拉伸
   .qr-close { color:#fff; font-size:13px; margin-top:14px; cursor:pointer; padding:8px 20px; }
+
+  @media (max-width: 480px) {
+    body { padding: 0; min-height: 100vh; }
+    .phone { border:none; border-radius:0; box-shadow:none; }
+  }
 </style>
 </head>
 <body>
@@ -1722,6 +1727,22 @@ function earnMarkDone(id) {
       earnStats.total += earnGoals[i].target;
       planToast('🎉 目标完成，已移入历史');
       earnRender();
+// ===== 移动端自适应：让产品屏幕刚好适合手机屏幕（或稍小），无需上下滑动 =====
+function fitPhone() {
+  var phone = document.querySelector('.phone');
+  if (!phone) return;
+  var vw = window.innerWidth || document.documentElement.clientWidth;
+  var vh = window.innerHeight || document.documentElement.clientHeight;
+  var pw = 390, ph = 780;   // 设计尺寸
+  // 留 4px 边距，等比缩放到刚好或稍小
+  var scale = Math.min((vw - 4) / pw, (vh - 4) / ph, 1);
+  phone.style.transform = 'scale(' + scale + ')';
+  // 缩放后 flex 容器会按缩放后尺寸定位，无需额外调整
+}
+window.addEventListener('resize', fitPhone);
+window.addEventListener('orientationchange', function(){ setTimeout(fitPhone, 150); });
+fitPhone();
+
       return;
     }
   }
@@ -1815,7 +1836,9 @@ document.addEventListener('click', function(e) {
   if (pc) {
     var pg = parseInt(pc.dataset.page);
     show(pg);
-    if (pg === 7) chartRender('month');
+    if (pg === 7) 
+
+chartRender('month');
     else if (pg === 8) earnRender();
     else if (pg === 9) insRender();
     else if (pg === 11) histRender();
