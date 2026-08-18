@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProListIng 下载</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: "PingFang SC","Microsoft YaHei",sans-serif;
+    background: linear-gradient(165deg,#F7D66A,#F2C94C 40%,#E2B13C 100%);
+    min-height: 100vh;
+    display: flex; justify-content: center; padding: 30px 16px;
+  }
+  .card {
+    width: 100%; max-width: 420px; background: #FDF8F0;
+    border-radius: 18px; padding: 28px 22px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.18);
+    align-self: flex-start;
+  }
+  .logo {
+    font-family: "Brush Script MT","Segoe Script","Lucida Handwriting",cursive;
+    font-size: 34px; font-weight: bold; font-style: italic;
+    color: #4A3A2A; text-align: center; margin-bottom: 6px;
+  }
+  .sub { text-align:center; font-size:13px; color:#8A7355; margin-bottom:20px; }
+  .btn {
+    display: block; width:100%; text-align:center;
+    background: linear-gradient(135deg,#FFC93C,#FFB300);
+    color:#3A2C00; font-size:18px; font-weight:700;
+    padding: 15px 0; border-radius: 12px; text-decoration:none;
+    margin: 12px 0; box-shadow: 0 4px 12px rgba(255,179,0,.4);
+  }
+  .btn:active { transform: scale(.97); }
+  .info { font-size:12px; color:#8A7355; text-align:center; margin-bottom:16px; }
+  .tip {
+    background:#FFF3D1; border:1px solid #FFE2A8; border-radius:10px;
+    padding: 12px 14px; font-size:13px; color:#6D5A2E; line-height:1.8;
+    margin-bottom: 10px; display:none;
+  }
+  .tip b { color:#E64340; }
+  .steps { font-size:13px; color:#4A3A2A; line-height:1.9; margin-top:10px; }
+  .steps .t { font-weight:700; margin-bottom:4px; color:#3A2C00; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">ProListing</div>
+  <div class="sub">记账 · 计划 · 清单 · 多功能</div>
+
+  <!-- 微信提示 -->
+  <div class="tip" id="wxTip">
+    <b>⚠️ 微信内无法直接下载</b><br>
+    请点击右上角 <b>···</b> → 选择「<b>在浏览器打开</b>」→ 再点下方按钮下载
+  </div>
+
+  <!-- 未知来源提示 -->
+  <div class="tip" id="vivoTip" style="display:none;">
+    若点击下载没反应：请到手机<b>设置 → 安全/应用 → 允许安装未知来源应用</b>（vivo/小米等机型需开启）
+  </div>
+
+  <a class="btn" id="dlBtn" href="Prolist.apk" download="ProListIng.apk">⬇ 下载 ProListIng APK</a>
+
+  <div class="info">版本 1.0 · 大小 183KB · 完全离线 · 免费</div>
+
+  <div class="steps">
+    <div class="t">📲 安装指引</div>
+    1. 点击上方按钮下载 APK<br>
+    2. 下载完成后打开文件<br>
+    3. 若提示"未知来源"，点"允许/继续安装"<br>
+    4. 安装完成，打开使用
+  </div>
+</div>
+
+<script>
+// 检测微信内置浏览器
+var ua = navigator.userAgent;
+if (/MicroMessenger/i.test(ua)) {
+  document.getElementById('wxTip').style.display = 'block';
+}
+// 检测 vivo/小米/OPPO/华为 等（提示未知来源）
+var brand = '';
+var b = /(vivo|xiaomi|miui|oppo|huawei|honor|redmi|realme|oneplus|samsung)/i.exec(ua);
+if (b) {
+  document.getElementById('vivoTip').style.display = 'block';
+}
+// 微信内点击下载按钮也拦截（即使 href 也无效，已用 wxTip 引导）
+document.getElementById('dlBtn').addEventListener('click', function(e) {
+  if (/MicroMessenger/i.test(ua)) {
+    e.preventDefault();
+    alert('微信内无法下载，请点右上角···在浏览器打开后下载');
+  }
+});
+</script>
+</body>
+</html>
