@@ -1885,7 +1885,7 @@ function fitPhone() {
   var pw = 406, ph = 796;
   var topPad = 6, bottomPad = 6;   // 四周留白缩到最小（各6px），界面更大
   // 等比放大到"完整显示"的最大值（上限 1 = 原始大小），绝不裁剪内容
-  var scale = Math.min(vw / pw, (vh - topPad - bottomPad) / ph, 1);
+  var scale = Math.min(vw / pw, (vh - topPad - bottomPad) / ph, 1) * 0.5;  // 缩小50%
   // 缩放原点在顶部中心
   phone.style.transformOrigin = 'top center';
   phone.style.transform = 'scale(' + scale + ')';
