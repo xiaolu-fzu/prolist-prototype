@@ -1886,7 +1886,7 @@ function fitPhone() {
   var topPad = 20, bottomPad = 12;
   // 等比缩小：整个手机框完整放进屏幕（含上下留白），上限 1；再略微缩小 2%
   var scale = Math.min(vw / pw, (vh - topPad - bottomPad) / ph, 1);
-  scale = Math.min(scale, 1) * 0.98;
+  scale = Math.min(scale, 1) * 1.20;   // 放大 20%
   // 缩放原点在顶部中心
   phone.style.transformOrigin = 'top center';
   phone.style.transform = 'scale(' + scale + ')';
