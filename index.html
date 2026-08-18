@@ -1891,8 +1891,8 @@ function fitPhone() {
   phone.style.transformOrigin = 'top center';
   phone.style.transform = 'scale(' + scale + ')';
   // 普通流：margin 顶部 2px + 左右 auto 水平居中
-  // 右移：左边距取剩余空间的 55%，让手机框整体偏右
-  var leftGap = (vw - pw * scale) * 0.55;
+  // 水平位置：左边距取剩余空间的 50%（居中）
+  var leftGap = (vw - pw * scale) * 0.50;
   phone.style.margin = topPad + 'px 0 0 ' + Math.round(leftGap) + 'px';
   // body 高度 = 缩放后框 + 上下留白（不再受 100vh 干扰）
   document.body.style.height = Math.round(ph * scale + topPad + bottomPad) + 'px';
