@@ -332,7 +332,8 @@
   .qr-close { color:#fff; font-size:13px; margin-top:14px; cursor:pointer; padding:8px 20px; }
 
   @media (max-width: 480px) {
-    body { padding: 0; min-height: 100vh; }
+    /* 手机端：只保留产品界面本身，去掉所有装饰 */
+    body { padding:0; margin:0; min-height:100vh; overflow:hidden; background:#fff; }
     .phone { border:none; border-radius:0; box-shadow:none; }
   }
 </style>
@@ -1727,21 +1728,6 @@ function earnMarkDone(id) {
       earnStats.total += earnGoals[i].target;
       planToast('🎉 目标完成，已移入历史');
       earnRender();
-// ===== 移动端自适应：让产品屏幕刚好适合手机屏幕（或稍小），无需上下滑动 =====
-function fitPhone() {
-  var phone = document.querySelector('.phone');
-  if (!phone) return;
-  var vw = window.innerWidth || document.documentElement.clientWidth;
-  var vh = window.innerHeight || document.documentElement.clientHeight;
-  var pw = 390, ph = 780;   // 设计尺寸
-  // 留 4px 边距，等比缩放到刚好或稍小
-  var scale = Math.min((vw - 4) / pw, (vh - 4) / ph, 1);
-  phone.style.transform = 'scale(' + scale + ')';
-  // 缩放后 flex 容器会按缩放后尺寸定位，无需额外调整
-}
-window.addEventListener('resize', fitPhone);
-window.addEventListener('orientationchange', function(){ setTimeout(fitPhone, 150); });
-fitPhone();
 
       return;
     }
@@ -1882,6 +1868,31 @@ $('insAddBtn').addEventListener('click', function() {
 chartRender('month');
 insRender();
 earnRender();
+// ===== 移动端自适应：仅手机端生效（PC 原样不动） =====
+// 手机端：只保留产品界面内容，等比缩小到完整铺满手机屏幕，无需上下滑动
+function fitPhone() {
+  var phone = document.querySelector('.phone');
+  if (!phone) return;
+  var vw = window.innerWidth || document.documentElement.clientWidth;
+  var vh = window.innerHeight || document.documentElement.clientHeight;
+  if (vw > 480) {           // PC / 平板：不缩放，恢复原样
+    phone.style.transform = '';
+    document.body.style.height = '';
+    return;
+  }
+  var pw = 390, ph = 780;   // 设计尺寸
+  // 等比缩小：刚好铺满（取宽高两个方向的最小比例，上限 1）
+  var scale = Math.min(vw / pw, vh / ph, 1);
+  phone.style.transformOrigin = 'center center';
+  phone.style.transform = 'scale(' + scale + ')';
+  // body 高度 = 缩放后的实际高度，避免滚动条
+  document.body.style.height = Math.round(ph * scale) + 'px';
+}
+window.addEventListener('resize', fitPhone);
+window.addEventListener('orientationchange', function(){ setTimeout(fitPhone, 150); });
+fitPhone();
+
+
 </script>
 </body>
 </html>
