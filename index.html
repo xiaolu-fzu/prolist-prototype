@@ -321,13 +321,6 @@
   .earn-hist-item { font-size:12px; color:#4a3a2a; padding:8px 0; border-bottom:1px solid #f7f7f7; }
   .earn-hist-item:last-child { border-bottom:none; }
   .sub-desc { font-size:12px; color:#8a6d3b; text-align:center; margin-bottom:10px; }
-  .game-card { background:#fff; border-radius:12px; padding:6px 0; box-shadow:0 1px 4px rgba(0,0,0,.05); }
-  .game-item { display:flex; align-items:center; padding:12px 14px; cursor:pointer; border-bottom:1px solid #f7f7f7; }
-  .game-item:last-child { border-bottom:none; }
-  .game-item:active { background:#fff3d1; }
-  .game-name { font-size:14px; color:#222; flex:1; }
-  .game-url { font-size:10px; color:#999; margin-right:8px; }
-  .game-arrow { font-size:16px; color:#999; }
   .hist-mark { position:absolute; bottom:1px; left:50%; transform:translateX(-50%); font-size:10px; line-height:1; }
   .hist-mark.no { color:#e64340; }
   .hist-mark.fut { color:#ccc; }
@@ -337,21 +330,6 @@
   .qr-big { background:#fff; padding:20px; border-radius:16px; }
   .qr-big img { width:220px; height:auto; display:block; border-radius:8px; margin:0 auto; }   // 保持原始宽高比，不强制拉伸
   .qr-close { color:#fff; font-size:13px; margin-top:14px; cursor:pointer; padding:8px 20px; }
-
-  /* ===== 移动端全屏适配（GitHub Pages 移动访问）===== */
-  @media (max-width: 520px) {
-    body { padding: 0; margin: 0; }
-    .phone {
-      width: 100vw;
-      min-height: 100vh;
-      height: auto;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-    }
-    .phone::before { display: none; }
-    .note, .note2 { display: none; }
-  }
 </style>
 </head>
 <body>
@@ -574,7 +552,6 @@
         <div class="proj-card" data-page="8"><div class="proj-title cursive">ProListing-Record</div><div class="proj-desc">攒钱计划 · 定目标+日期范围，收入-支出累积看能否达成</div></div>
         <div class="proj-card" data-page="11"><div class="proj-title cursive">ProListing-Plan</div><div class="proj-desc">计划完成历史情况 · 按时/未按时一目了然</div></div>
         <div class="proj-card" data-page="9"><div class="proj-title cursive">ProListing-Plan</div><div class="proj-desc">计划完成心得体会</div></div>
-        <div class="proj-card" data-page="12"><div class="proj-title cursive">游戏大厅</div><div class="proj-desc">网页小游戏</div></div>
       </div>
       <div class="tabbar">
         <div class="t tabnav nav-detail"><span class="ic">📒</span>记账</div>
@@ -679,26 +656,6 @@
         <div class="plan-list-sec">
           <div class="plan-list-head">计划完成统计</div>
           <div id="histStats"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 屏12 游戏大厅子页 -->
-    <div class="screen" id="s12">
-      <div class="sub-head"><span class="cm-back" id="backGames">‹</span><span class="cm-title">游戏大厅</span></div>
-      <div class="sub-body">
-        <div class="sub-desc">AI 做的网页小游戏，链接指向我的 GitHub 库，别担心，感兴趣就放心点吧！</div>
-        <div class="game-card">
-          <div class="game-item" data-url="https://xiaolu-fzu.github.io/fruit-rogue/" data-name="肉鸽国宝特工">
-            <div class="game-name">肉鸽国宝特工</div>
-            <div class="game-url">https://xiaolu-fzu.github.io/fruit-rogue/</div>
-            <div class="game-arrow">›</div>
-          </div>
-          <div class="game-item" data-url="https://xiaolu-fzu.github.io/bennett-boss-rush/" data-name="班尼特试炼">
-            <div class="game-name">班尼特试炼</div>
-            <div class="game-url">https://xiaolu-fzu.github.io/bennett-boss-rush/</div>
-            <div class="game-arrow">›</div>
-          </div>
         </div>
       </div>
     </div>
@@ -1842,7 +1799,7 @@ function histRender() {
 $('histPrev').addEventListener('click', function(e) { e.stopPropagation(); histMonth0--; if (histMonth0 < 0) { histMonth0 = 11; histYear--; } histRender(); });
 $('histNext').addEventListener('click', function(e) { e.stopPropagation(); histMonth0++; if (histMonth0 > 11) { histMonth0 = 0; histYear++; } histRender(); });
 $('backHist').addEventListener('click', function() { show(6); });
-$('backGames').addEventListener('click', function() { show(6); });
+
 histRender();
 var insights = [{ t: '远方和明天，我都想要！', d: '2026.8.17' }, { t: '自律是焦虑最好的解药。', d: '2026.8.17' }];
 function insDateNow() { var n = DEMO_TODAY; return n.getFullYear() + '.' + (n.getMonth() + 1) + '.' + n.getDate(); }
@@ -1876,16 +1833,7 @@ document.addEventListener('click', function(e) {
   if (t.classList && t.classList.contains('earn-mark')) { earnMarkDone(parseInt(t.dataset.id)); return; }
   if (t.classList && t.classList.contains('earn-del')) { earnDelete(parseInt(t.dataset.id)); return; }
   if (t.classList && t.classList.contains('ins-del')) { insights.splice(parseInt(t.dataset.i), 1); insRender(); return; }
-  // 游戏大厅：点条目打开链接（新标签或提示）
-  var gi = t.closest ? t.closest('.game-item') : null;
-  if (gi) {
-    var url = gi.dataset.url, name = gi.dataset.name;
-    var opened = false;
-    try { if (window.open) { window.open(url, '_blank'); opened = true; } } catch (e) {}
-    if (!opened) planToast('打开「' + name + '」：' + url);
-    return;
-  }
-});
+  
 $('backVis').addEventListener('click', function() { show(6); });
 $('backEarn').addEventListener('click', function() { show(6); });
 $('backInsight').addEventListener('click', function() { show(6); });
